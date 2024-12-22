@@ -1,10 +1,25 @@
 import Link from "next/link";
 
-export default function Home() {
+import style from "./style.module.css";
+
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
+const getCurrentWeather = async () => {
+  const res =
+    await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=Seoul&aqi=no
+`);
+
+  return res.json();
+};
+
+export default async function Home() {
+  const res = await getCurrentWeather();
+  console.log(res);
+
   return (
     <>
       <h1>main</h1>
-      <ul>
+      <ul className={style.list}>
         <li>
           <Link href="/seoul">서울</Link>
         </li>
@@ -12,7 +27,7 @@ export default function Home() {
           <Link href="/newyork">뉴욕</Link>
         </li>
         <li>
-          <Link href="london">런던</Link>
+          <Link href="/london">런던</Link>
         </li>
       </ul>
     </>
