@@ -2,7 +2,20 @@ import Link from "next/link";
 
 import style from "./style.module.css";
 
-export default function Home() {
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
+const getCurrentWeather = async () => {
+  const res =
+    await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=Seoul&aqi=no
+`);
+
+  return res.json();
+};
+
+export default async function Home() {
+  const res = await getCurrentWeather();
+  console.log(res);
+
   return (
     <>
       <h1>main</h1>
