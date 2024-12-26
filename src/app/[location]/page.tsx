@@ -10,18 +10,31 @@ type Props = {
   };
 };
 
-export function generateMetadata({ searchParams }: Props) {
+export async function generateMetadata({ searchParams }: Props) {
+  const { name } = await searchParams;
+
   return {
-    title: `날씨 앱 - ${searchParams.name}`,
-    description: `${searchParams.name}날씨를 알려드립니다.`,
+    title: `날씨 앱 - ${name}`,
+    description: `${name} 날씨를 알려드립니다`,
   };
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  const name = searchParams.name;
+  // params와 searchParams를 await로 처리
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
-  const res = await getForecast(params.location);
+  // 비동기적으로 처리된 결과에서 필요한 값을 추출
+  const name = resolvedSearchParams.name || "Unknown";
+  const location = resolvedParams.location;
 
+  // location이 없는 경우 에러 처리
+  if (!location) {
+    throw new Error("Location is required!");
+  }
+
+  // API 호출
+  const res = await getForecast(location);
   return (
     <>
       <h1>{name}의 3일 예보</h1>
