@@ -2,16 +2,12 @@ import HomeButton from "../components/HomeButton";
 import { getForecast } from "../utils/getForecast";
 
 type Props = {
-  params: {
-    location: string;
-  };
-  searchParams: {
-    name: string;
-  };
+  params: Record<string, string | undefined>;
+  searchParams: Record<string, string | undefined>;
 };
 
 export async function generateMetadata({ searchParams }: Props) {
-  const name = searchParams.name || "Unknown";
+  const name = searchParams?.name || "Unknown";
 
   return {
     title: `날씨 앱 - ${name}`,
@@ -20,8 +16,8 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  const name = searchParams.name || "Unknown";
-  const location = params.location;
+  const name = searchParams?.name || "Unknown";
+  const location = params?.location;
   // location이 없는 경우 에러 처리
   if (!location) {
     throw new Error("Location is required!");
