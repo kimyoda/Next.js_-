@@ -11,7 +11,7 @@ type Props = {
 };
 
 export async function generateMetadata({ searchParams }: Props) {
-  const { name } = await searchParams;
+  const name = searchParams.name || "Unknown";
 
   return {
     title: `날씨 앱 - ${name}`,
@@ -20,14 +20,8 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  // params와 searchParams를 await로 처리
-  const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-
-  // 비동기적으로 처리된 결과에서 필요한 값을 추출
-  const name = resolvedSearchParams.name || "Unknown";
-  const location = resolvedParams.location;
-
+  const name = searchParams.name || "Unknown";
+  const location = params.location;
   // location이 없는 경우 에러 처리
   if (!location) {
     throw new Error("Location is required!");
