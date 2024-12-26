@@ -3,12 +3,8 @@ import { getForecast } from "../utils/getForecast";
 
 // 수정된 Props 타입
 type Props = {
-  params: {
-    location: string;
-  };
-  searchParams: {
-    name?: string;
-  };
+  params: Promise<{ location: string }>; // params를 Promise로 정의
+  searchParams: { name?: string };
 };
 
 export async function generateMetadata({ searchParams }: Props) {
@@ -21,9 +17,10 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  // 동기적으로 params와 searchParams 처리
+  // params를 비동기로 처리
+  const resolvedParams = await params;
   const name = searchParams?.name || "Unknown";
-  const location = params?.location;
+  const location = resolvedParams.location;
 
   // location이 없는 경우 에러 처리
   if (!location) {
