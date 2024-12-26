@@ -4,11 +4,12 @@ import { getForecast } from "../utils/getForecast";
 // 수정된 Props 타입
 type Props = {
   params: Promise<{ location: string }>; // params를 Promise로 정의
-  searchParams: { name?: string };
+  searchParams: Promise<{ name?: string }>; // searchParams도 Promise로 정의
 };
 
 export async function generateMetadata({ searchParams }: Props) {
-  const name = searchParams?.name || "Unknown";
+  const resolvedSearchParams = await searchParams; // 비동기로 처리
+  const name = resolvedSearchParams?.name || "Unknown";
 
   return {
     title: `날씨 앱 - ${name}`,
@@ -17,10 +18,12 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  // params를 비동기로 처리
+  // params와 searchParams를 비동기로 처리
   const resolvedParams = await params;
-  const name = searchParams?.name || "Unknown";
-  const location = resolvedParams.location;
+  const resolvedSearchParams = await searchParams;
+
+  const name = resolvedSearchParams?.name || "Unknown";
+  const location = resolvedParams?.location;
 
   // location이 없는 경우 에러 처리
   if (!location) {
