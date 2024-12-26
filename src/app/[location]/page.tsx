@@ -1,9 +1,14 @@
 import HomeButton from "../components/HomeButton";
 import { getForecast } from "../utils/getForecast";
 
+// 수정된 Props 타입
 type Props = {
-  params: Promise<{ location: string }>; // params를 Promise로 감쌈
-  searchParams: { name: string };
+  params: {
+    location: string;
+  };
+  searchParams: {
+    name?: string;
+  };
 };
 
 export async function generateMetadata({ searchParams }: Props) {
@@ -16,10 +21,9 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function Detail({ params, searchParams }: Props) {
-  // params를 await로 비동기 처리
-  const resolvedParams = await params;
+  // 동기적으로 params와 searchParams 처리
   const name = searchParams?.name || "Unknown";
-  const location = resolvedParams?.location;
+  const location = params?.location;
 
   // location이 없는 경우 에러 처리
   if (!location) {
